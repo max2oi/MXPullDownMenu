@@ -10,4 +10,6 @@
 
 @interface MXPullDownMenu : UIResponder
 
+- (id)initWithArray:(NSArray *)array;
+
 @end

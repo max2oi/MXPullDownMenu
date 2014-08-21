@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "MXPullDownMenu.h"
+#import "MXPullDownMenu000.h"
 
 @interface ViewController ()
 
@@ -27,6 +29,11 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.view.backgroundColor = [UIColor grayColor];
+    self.navigationItem.title = @"NavigationBar";
+    
+    MXPullDownMenu000 *menu = [[MXPullDownMenu000 alloc] initWithFrame:CGRectMake(0, 200, 320, 36)];
+    [self.view addSubview:menu];
 }
 
 - (void)didReceiveMemoryWarning

@@ -8,6 +8,23 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum
+{
+    IndicatorStateShow = 0,
+    IndicatorStateHide
+}
+IndicatorState;
+
+
 @interface MXPullDownMenu000 : UIView
+
+@end
+
+
+
+// 
+@interface CALayer (MXAddAnimationAndValue)
+
+- (void)addAnimation:(CAAnimation *)anim andValue:(NSValue *)value forKeyPath:(NSString *)keyPath;
 
 @end
