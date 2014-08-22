@@ -15,21 +15,20 @@
     
     CATextLayer *_title_0;
     CAShapeLayer *_indicator_0;
-    IndicatorState _indicatorStatus_0;
+    IndicatorStatus _indicatorStatus_0;
     UITableView *_tableView_0;
 
     CAShapeLayer *_separatorLine;
     
     CATextLayer *_title_1;
     CAShapeLayer *_indicator_1;
-    IndicatorState _indicatorStatus_1;
+    IndicatorStatus _indicatorStatus_1;
     UITableView *_tableView_1;
 
     NSArray *_layers;
-    NSArray *_layersOriginPosition;
-    NSArray *_layersConvertedPositon;
     
-    CGPoint _touchPoint;
+    UIView *_backGroundView;
+    BackGroundViewStatus _backGroundViewStatus;
     
     
 }
@@ -39,12 +38,11 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.backgroundColor = [UIColor blueColor];
-        
+        // 设置menu, 并添加手势
+        self.backgroundColor = [UIColor whiteColor];
         CGRect theFrame = CGRectMake(frame.origin.x, frame.origin.y, 320, 40);
-        
-        _menu = [self creatMenuWithColor:[UIColor whiteColor]];
-        [self.layer addSublayer:_menu];
+        UIGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapMenu:)];
+        [self addGestureRecognizer:tapGesture];
         
         _title_0 = [self creatTextLayerWithNSString:@"商品排序" withColor:[UIColor orangeColor] andPosition:CGPointMake(theFrame.size.width / 4, theFrame.size.height / 2)];
         [self.layer addSublayer:_title_0];
@@ -61,21 +59,113 @@
         [self.layer addSublayer:_indicator_1];
         _indicatorStatus_1 = IndicatorStateHide;
         
-        _tableView_0 = [self creatTableWithArray:@[@"haha"] atPosition:CGPointMake(0, 0)];
-//        [self addSubview:_tableView_0];
         
         
         
         // 用_layers来保存所有的layers
-        _layers = @[ _menu, _title_0, _indicator_0, _separatorLine, _title_1, _indicator_1 ];
-        _layersOriginPosition = [self getPositionValuesWithLayers:_layers convert:NO];
-        _layersConvertedPositon = [self getPositionValuesWithLayers:_layers convert:YES];
+        _layers = @[ _title_0, _indicator_0, _separatorLine, _title_1, _indicator_1 ];
+        
+        // 创建背景
+        _backGroundView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        _backGroundView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.0];
+        // 透明
+        _backGroundView.opaque = NO;
+        // 给背景创建点击事件
+        UIGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBackGround:)];
+        [_backGroundView addGestureRecognizer:gesture];
         
     }
     return self;
 }
 
+#pragma mark - tapEvent
 
+
+
+// 处理菜单点击事件.
+- (void)tapMenu:(UITapGestureRecognizer *)paramSender
+{
+    CGPoint touchPoint = [paramSender locationInView:self];
+    
+    if (touchPoint.x < 160) {
+        // 改变indicator状态
+        [self animateIndicator:_indicator_0 Forward:(_indicatorStatus_0 == IndicatorStateHide)];
+        _indicatorStatus_0 = (_indicatorStatus_0 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
+        
+        // 判断是否改变另一个indicator状态
+        if (_indicatorStatus_1 == IndicatorStateShow) {
+            [self animateIndicator:_indicator_1 Forward:(_indicatorStatus_1 == IndicatorStateHide)];
+            _indicatorStatus_1 = (_indicatorStatus_1 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
+        }
+        
+        
+        
+  
+    } else {
+        // 改变indicator状态
+        [self animateIndicator:_indicator_1 Forward:(_indicatorStatus_1 == IndicatorStateHide)];
+        _indicatorStatus_1 = (_indicatorStatus_1 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
+        
+        
+        // 判断是否改变另一个indicator状态
+        if (_indicatorStatus_0 == IndicatorStateShow) {
+            [self animateIndicator:_indicator_0 Forward:(_indicatorStatus_0 == IndicatorStateHide)];
+            _indicatorStatus_0 = (_indicatorStatus_0 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
+        }
+    }
+    
+    
+    // 如果有indicator为show的话, 显示背景.
+    if (_indicatorStatus_0 == IndicatorStateShow || _indicatorStatus_1 == IndicatorStateShow) {
+        [self animateBackGroundView:_backGroundView show:YES];
+    // 如果都为hide, 关闭背景.
+    } else if (_indicatorStatus_0 == IndicatorStateHide && _indicatorStatus_1 == IndicatorStateHide) {
+        [self animateBackGroundView:_backGroundView show:NO];
+    }
+    
+    
+}
+
+- (void)tapBackGround:(UITapGestureRecognizer *)paramSender
+{
+    
+    [self animateBackGroundView:paramSender.view show:NO];
+    _backGroundViewStatus = BackGroundViewStatusHide;
+    
+    if (_indicatorStatus_0 == IndicatorStateShow) {
+        [self animateIndicator:_indicator_0 Forward:(_indicatorStatus_0 == IndicatorStateHide)];
+        _indicatorStatus_0 = (_indicatorStatus_0 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
+    }
+    if (_indicatorStatus_1 == IndicatorStateShow) {
+        [self animateIndicator:_indicator_1 Forward:(_indicatorStatus_1 == IndicatorStateHide)];
+        _indicatorStatus_1 = (_indicatorStatus_1 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
+    }
+    
+}
+
+
+#pragma mark - tableView
+
+- (UITableView *)creatTableWithArray:(NSArray *)array atPosition:(CGPoint)point
+{
+    UITableView *tableView = [UITableView new];
+    
+    tableView.frame = CGRectMake(point.x, point.y, 160, 240);
+    tableView.rowHeight = 40;
+    
+    
+    return tableView;
+}
+
+- (void)switchTableView:(UITableView *)tableView show:(BOOL)show
+{
+    if (show) {
+        self.frame = [UIScreen mainScreen].bounds;
+        
+    }
+}
+
+#pragma mark - animation
 
 - (void)animateIndicator:(CAShapeLayer *)indicator Forward:(BOOL)forward
 {
@@ -104,84 +194,36 @@
 }
 
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)animateBackGroundView:(UIView *)view show:(BOOL)show
 {
-
-    _touchPoint = [self pointWithTouches:touches];
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    self.frame = [UIScreen mainScreen].bounds;
-    [self relayoutLayers:_layers convert:YES];
-
     
-    
-    if (_touchPoint.x < 160 && [self pointWithTouches:touches].x < 160) {
-        [self animateIndicator:_indicator_0 Forward:(_indicatorStatus_0 == IndicatorStateShow)];
-        _indicatorStatus_0 = (_indicatorStatus_0 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
-    }
-    if (_touchPoint.x > 160 && [self pointWithTouches:touches].x > 160) {
-        [self animateIndicator:_indicator_1 Forward:(_indicatorStatus_1 == IndicatorStateShow)];
-        _indicatorStatus_1 = (_indicatorStatus_1 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
-    }
-    
-
-}
-
-
-
-
-- (CGPoint)pointWithTouches:(NSSet *)touches
-{
-    UITouch *touch = [touches anyObject];
-    CGPoint point = [touch locationInView:self];
-    return point;
-}
-
-#pragma mark - tableView
-
-- (UITableView *)creatTableWithArray:(NSArray *)array atPosition:(CGPoint)point
-{
-    UITableView *tableView = [UITableView new];
-    
-    tableView.frame = CGRectMake(point.x, point.y, 160, 240);
-    tableView.rowHeight = 40;
-    
-    
-    return tableView;
-}
-
-- (void)switchTableView:(UITableView *)tableView show:(BOOL)show
-{
     if (show) {
-        self.frame = [UIScreen mainScreen].bounds;
         
+        
+        [self.superview addSubview:view];
+        [view.superview addSubview:self];
+        
+
+        [UIView animateWithDuration:0.2 animations:^{
+            view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.3];
+        }];
+
+        
+    } else {
+        [UIView animateWithDuration:0.2 animations:^{
+            view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.0];
+        } completion:^(BOOL finished) {
+            [view removeFromSuperview];
+        }];
+        
+
     }
+    
 }
 
 
 #pragma mark - 绘图
 
-- (CAShapeLayer *)creatMenuWithColor:(UIColor *)color
-{
-    CAShapeLayer *layer = [CAShapeLayer new];
-    
-    UIBezierPath *path = [UIBezierPath new];
-    [path moveToPoint:CGPointMake(0, 0)];
-    [path addLineToPoint:CGPointMake(self.frame.size.width, 0)];
-    
-    layer.path = path.CGPath;
-    layer.lineWidth = self.frame.size.height;
-    layer.strokeColor = color.CGColor;
-    
-    CGPathRef bound = CGPathCreateCopyByStrokingPath(layer.path, nil, layer.lineWidth, kCGLineCapButt, kCGLineJoinMiter, layer.miterLimit);
-    layer.bounds = CGPathGetBoundingBox(bound);
-    
-    layer.position = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
-    
-    return layer;
-}
 
 - (CAShapeLayer *)creatIndicatorWithColor:(UIColor *)color andPosition:(CGPoint)point
 {
@@ -241,55 +283,6 @@
     return layer;
 }
 
-- (void)removeLayers:(NSArray *)layers
-{
-    for (CALayer *layer in layers) {
-        [layer removeFromSuperlayer];
-    }
-}
-
-// 重新布局layers
-- (void)relayoutLayers:(NSArray *)layers convert:(BOOL)convert
-{
-
-    if (convert) {
-        
-        for (CALayer *layer in layers) {
-                        NSValue *positionValue = [_layersConvertedPositon objectAtIndex:[layers indexOfObject:layer]];
-            layer.position = [positionValue CGPointValue];
-            [self.layer addSublayer:layer];
-        }
-    } else {
-        
-        for (CALayer *layer in layers) {
-            NSValue *positionValue = [_layersOriginPosition objectAtIndex:[layers indexOfObject:layer]];
-            layer.position = [positionValue CGPointValue];
-            [self.layer addSublayer:layer];
-        }
-    }
-}
-
-- (NSArray *)getPositionValuesWithLayers:(NSArray *)layers convert:(BOOL)convert
-{
-    NSMutableArray *positions = [[NSMutableArray alloc] initWithCapacity:5];
-    
-    if (convert) {
-        for (CALayer *layer in layers) {
-            
-            // 由父layer调用, 将子layer的坐标转换到其他layer的坐标系统中, 返回转换后的结果. toLayer参数为空, 表示转换到屏幕坐标中.
-            CGPoint newPosition = [self.layer convertPoint:layer.position toLayer:nil];
-            [positions addObject:[NSValue valueWithCGPoint:newPosition]];
-            
-        }
-    } else {
-        for (CALayer *layer in layers) {
-            [positions addObject:[NSValue valueWithCGPoint:layer.position]];
-            
-        }
-    }
-    
-    return positions;
-}
 
 
 @end

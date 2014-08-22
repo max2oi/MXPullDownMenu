@@ -29,7 +29,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.view.backgroundColor = [UIColor grayColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     self.navigationItem.title = @"NavigationBar";
     
     MXPullDownMenu000 *menu = [[MXPullDownMenu000 alloc] initWithFrame:CGRectMake(0, 200, 320, 36)];

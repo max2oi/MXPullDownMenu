@@ -13,7 +13,14 @@ typedef enum
     IndicatorStateShow = 0,
     IndicatorStateHide
 }
-IndicatorState;
+IndicatorStatus;
+
+typedef enum
+{
+    BackGroundViewStatusShow = 0,
+    BackGroundViewStatusHide
+}
+BackGroundViewStatus;
 
 
 @interface MXPullDownMenu000 : UIView
