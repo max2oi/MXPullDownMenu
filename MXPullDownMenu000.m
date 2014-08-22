@@ -31,6 +31,13 @@
     BackGroundViewStatus _backGroundViewStatus;
     
     
+    
+    //*****
+    NSArray *_titles;
+    NSArray *_indicators;
+    NSMutableArray *_indicatorStatus;
+    NSArray *_tableViews;
+    
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -60,10 +67,19 @@
         _indicatorStatus_1 = IndicatorStateHide;
         
         
+        _tableView_0 = [self creatTableWithArray:@[ @"fff" ] atPosition:CGPointMake(self.frame.origin.x, self.frame.origin.y + self.frame.size.height)];
+        _tableView_1 = [self creatTableWithArray:@[ @"fff" ] atPosition:CGPointMake(self.frame.origin.x + self.frame.size.width / 2, self.frame.origin.y + self.frame.size.height)];
+        
+        //indicatorStatus
+        _indicators = @[ _indicator_0, _indicator_1 ];
+        _indicatorStatus = [[NSMutableArray alloc] initWithArray:@[ @(_indicatorStatus_0), @(_indicatorStatus_1) ]];
+        _titles = @[ _title_0, _title_1 ];
+        _tableViews = @[ _tableView_0, _tableView_1 ];
+        
         
         
         // 用_layers来保存所有的layers
-        _layers = @[ _title_0, _indicator_0, _separatorLine, _title_1, _indicator_1 ];
+//        _layers = @[ _title_0, _indicator_0, _separatorLine, _title_1, _indicator_1 ];
         
         // 创建背景
         _backGroundView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -73,6 +89,8 @@
         // 给背景创建点击事件
         UIGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBackGround:)];
         [_backGroundView addGestureRecognizer:gesture];
+        
+        
         
     }
     return self;
@@ -87,59 +105,61 @@
 {
     CGPoint touchPoint = [paramSender locationInView:self];
     
+    // 思路: 根据indicator的状态去判断.
+    NSInteger tapIndex;
     if (touchPoint.x < 160) {
-        // 改变indicator状态
-        [self animateIndicator:_indicator_0 Forward:(_indicatorStatus_0 == IndicatorStateHide)];
-        _indicatorStatus_0 = (_indicatorStatus_0 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
+        tapIndex = 0;
         
-        // 判断是否改变另一个indicator状态
-        if (_indicatorStatus_1 == IndicatorStateShow) {
-            [self animateIndicator:_indicator_1 Forward:(_indicatorStatus_1 == IndicatorStateHide)];
-            _indicatorStatus_1 = (_indicatorStatus_1 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
-        }
-        
-        
-        
-  
     } else {
-        // 改变indicator状态
-        [self animateIndicator:_indicator_1 Forward:(_indicatorStatus_1 == IndicatorStateHide)];
-        _indicatorStatus_1 = (_indicatorStatus_1 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
-        
-        
-        // 判断是否改变另一个indicator状态
-        if (_indicatorStatus_0 == IndicatorStateShow) {
-            [self animateIndicator:_indicator_0 Forward:(_indicatorStatus_0 == IndicatorStateHide)];
-            _indicatorStatus_0 = (_indicatorStatus_0 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
+        tapIndex = 1;
+    }
+    
+    //除了被点击的,先全部恢复为初始状态.
+    for (int i = 0; i < _indicatorStatus.count; i++) {
+        // 若不是被点击的
+        if (i != tapIndex) {
+            [_indicatorStatus replaceObjectAtIndex:i withObject:@(IndicatorStateHide)];
+            IndicatorStatus status = [_indicatorStatus[i] intValue];
+            [self animateIndicator:_indicators[i] Forward:(status == IndicatorStateShow) complete:^{
+                [self animateTableView:_tableViews[i] show:(status == IndicatorStateShow) complete:^{
+                    // 什么也不做
+                }];
+            }];
         }
     }
     
+    // 对于点击的, 更改其状态.
+    NSInteger newStatus = ([_indicatorStatus[tapIndex] intValue] == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
+    [_indicatorStatus replaceObjectAtIndex:tapIndex withObject:@(newStatus)];
+
+    // 对点击的做出改变, 对未点击的做出状态判断, 展开的收起来, 没有展开的什么也不做.
+    [self animateIndicator:_indicators[tapIndex] Forward:(newStatus == IndicatorStateShow) complete:^{
+        [self animateBackGroundView:_backGroundView show:(newStatus == IndicatorStateShow) complete:^{
+            [self animateTableView:_tableViews[tapIndex] show:(newStatus == IndicatorStateShow) complete:^{
+                // 什么也不做
+            }];
+        }];
+    }];
     
-    // 如果有indicator为show的话, 显示背景.
-    if (_indicatorStatus_0 == IndicatorStateShow || _indicatorStatus_1 == IndicatorStateShow) {
-        [self animateBackGroundView:_backGroundView show:YES];
-    // 如果都为hide, 关闭背景.
-    } else if (_indicatorStatus_0 == IndicatorStateHide && _indicatorStatus_1 == IndicatorStateHide) {
-        [self animateBackGroundView:_backGroundView show:NO];
-    }
-    
-    
+
 }
 
 - (void)tapBackGround:(UITapGestureRecognizer *)paramSender
 {
-    
-    [self animateBackGroundView:paramSender.view show:NO];
-    _backGroundViewStatus = BackGroundViewStatusHide;
-    
-    if (_indicatorStatus_0 == IndicatorStateShow) {
-        [self animateIndicator:_indicator_0 Forward:(_indicatorStatus_0 == IndicatorStateHide)];
-        _indicatorStatus_0 = (_indicatorStatus_0 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
+    // 全部恢复状态.
+    for (int i = 0; i < _indicatorStatus.count; i++) {
+            [_indicatorStatus replaceObjectAtIndex:i withObject:@(IndicatorStateHide)];
+            IndicatorStatus status = [_indicatorStatus[i] intValue];
+            [self animateIndicator:_indicators[i] Forward:(status == IndicatorStateShow) complete:^{
+                [self animateBackGroundView:_backGroundView show:(status == IndicatorStateShow) complete:^{
+                    [self animateTableView:_tableViews[i] show:(status == IndicatorStateShow) complete:^{
+                        // 什么也不做
+                    }];
+                }];
+            }];
     }
-    if (_indicatorStatus_1 == IndicatorStateShow) {
-        [self animateIndicator:_indicator_1 Forward:(_indicatorStatus_1 == IndicatorStateHide)];
-        _indicatorStatus_1 = (_indicatorStatus_1 == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
-    }
+    
+    
     
 }
 
@@ -157,17 +177,10 @@
     return tableView;
 }
 
-- (void)switchTableView:(UITableView *)tableView show:(BOOL)show
-{
-    if (show) {
-        self.frame = [UIScreen mainScreen].bounds;
-        
-    }
-}
 
 #pragma mark - animation
 
-- (void)animateIndicator:(CAShapeLayer *)indicator Forward:(BOOL)forward
+- (void)animateIndicator:(CAShapeLayer *)indicator Forward:(BOOL)forward complete:(void(^)())complete
 {
     [CATransaction begin];
     [CATransaction setAnimationDuration:0.25];
@@ -181,8 +194,9 @@
         [indicator addAnimation:anim andValue:anim.values.lastObject forKeyPath:anim.keyPath];
     }
     
-    
     [CATransaction commit];
+    
+    complete();
 }
 
 
@@ -194,7 +208,7 @@
 }
 
 
-- (void)animateBackGroundView:(UIView *)view show:(BOOL)show
+- (void)animateBackGroundView:(UIView *)view show:(BOOL)show complete:(void(^)())complete
 {
     
     if (show) {
@@ -216,8 +230,19 @@
             [view removeFromSuperview];
         }];
         
-
     }
+    complete();
+    
+}
+
+- (void)animateTableView:(UITableView *)tableView show:(BOOL)show complete:(void(^)())complete
+{
+    if (show) {
+        [self.superview addSubview:tableView];
+    } else {
+        [tableView removeFromSuperview];
+    }
+    complete();
     
 }
 
