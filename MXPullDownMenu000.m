@@ -17,11 +17,10 @@
     
     NSMutableArray *_titles;
     NSMutableArray *_indicators;
-    NSMutableArray *_indicatorStatus;
     
     
-    NSInteger _lastSelectedIndex;
     NSInteger _currentSelectedIndex;
+    bool _show;
     
     NSInteger _numOfMenu;
     
@@ -48,7 +47,6 @@
 
         _titles = [[NSMutableArray alloc] initWithCapacity:_numOfMenu];
         _indicators = [[NSMutableArray alloc] initWithCapacity:_numOfMenu];
-        _indicatorStatus = [[NSMutableArray alloc] initWithCapacity:_numOfMenu];
         
         for (int i = 0; i < _numOfMenu; i++) {
             
@@ -61,7 +59,6 @@
             CAShapeLayer *indicator = [self creatIndicatorWithColor:[UIColor orangeColor] andPosition:CGPointMake(position.x + title.bounds.size.width / 2 + 8, frame.size.height / 2)];
             [self.layer addSublayer:indicator];
             [_indicators addObject:indicator];
-            [_indicatorStatus addObject:@(IndicatorStateHide)];
             
             if (i != _numOfMenu - 1) {
                 CGPoint separatorPosition = CGPointMake((i + 1) * separatorLineInterval, frame.size.height / 2);
@@ -82,8 +79,6 @@
         [self addGestureRecognizer:tapGesture];
         
    
-        // 用_layers来保存所有的layers
-//        _layers = @[ _title_0, _indicator_0, _separatorLine, _title_1, _indicator_1 ];
         
         // 创建背景
         _backGroundView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -95,6 +90,9 @@
         [_backGroundView addGestureRecognizer:gesture];
         
         
+        
+        _currentSelectedIndex = -1;
+        _show = NO;
         
     }
     return self;
@@ -109,62 +107,55 @@
 {
     CGPoint touchPoint = [paramSender locationInView:self];
     
-    // 思路: 根据indicator的状态去判断.
-    
     // 得到tapIndex
+    
     NSInteger tapIndex = touchPoint.x / (self.frame.size.width / _numOfMenu);
     
+
     
-    //除了被点击的,先全部恢复为初始状态.
     for (int i = 0; i < _numOfMenu; i++) {
-        // 若不是被点击的
         if (i != tapIndex) {
-            [_indicatorStatus replaceObjectAtIndex:i withObject:@(IndicatorStateHide)];
-            IndicatorStatus status = [_indicatorStatus[i] intValue];
-            [self animateIndicator:_indicators[i] Forward:(status == IndicatorStateShow) complete:^{
+            [self animateIndicator:_indicators[i] Forward:NO complete:^{
                 //什么也不做呀
             }];
         }
     }
     
-    // 对于点击的, 更改其状态.
-    NSInteger newStatus = ([_indicatorStatus[tapIndex] intValue] == IndicatorStateShow) ? IndicatorStateHide : IndicatorStateShow;
-    [_indicatorStatus replaceObjectAtIndex:tapIndex withObject:@(newStatus)];
-
-    // 对点击的做出改变, 对未点击的做出状态判断, 展开的收起来, 没有展开的什么也不做.
-    [self animateIndicator:_indicators[tapIndex] Forward:(newStatus == IndicatorStateShow) complete:^{
-        [self animateBackGroundView:_backGroundView show:(newStatus == IndicatorStateShow) complete:^{
-            [self animateTableView:_tableView show:(newStatus == IndicatorStateShow) complete:^{
-                // 什么也不做
+    
+    if (tapIndex == _currentSelectedIndex && _show) {
+        [self animateIndicator:_indicators[_currentSelectedIndex] Forward:NO complete:^{
+            [self animateBackGroundView:_backGroundView show:NO complete:^{
+                [self animateTableView:_tableView show:NO complete:^{
+                    _show = NO;
+                }];
             }];
         }];
-    }];
-    
+    } else {
+        [self animateIndicator:_indicators[tapIndex] Forward:YES complete:^{
+            [self animateBackGroundView:_backGroundView show:YES complete:^{
+                [self animateTableView:_tableView show:YES complete:^{
+                    _show = YES;
+                }];
+            }];
+        }];
+    }
+    _currentSelectedIndex = tapIndex;
+
+ 
 
 }
 
 - (void)tapBackGround:(UITapGestureRecognizer *)paramSender
 {
-
-
-    for (int i = 0; i < _numOfMenu; i++) {
-        
-        if ([_indicatorStatus[i] intValue] == IndicatorStateShow) {
-            [_indicatorStatus replaceObjectAtIndex:i withObject:@(IndicatorStateHide)];
-            [self animateIndicator:_indicators[i] Forward:NO complete:^{
-                [self animateBackGroundView:_backGroundView show:NO complete:^{
-                    [self animateTableView:_tableView show:NO complete:^{
-                        //什么也不做
-                    }];
-                }];
+    
+    [self animateIndicator:_indicators[_currentSelectedIndex] Forward:NO complete:^{
+        [self animateBackGroundView:_backGroundView show:NO complete:^{
+            [self animateTableView:_tableView show:NO complete:^{
+                // 什么也不做
             }];
-        }
+        }];
+    }];
 
-    }
-    
-
-    
-    
 }
 
 
