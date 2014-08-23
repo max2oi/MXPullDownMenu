@@ -11,74 +11,77 @@
 @implementation MXPullDownMenu000
 {
     
-    CAShapeLayer *_menu;
-    
-    CATextLayer *_title_0;
-    CAShapeLayer *_indicator_0;
-    IndicatorStatus _indicatorStatus_0;
-    UITableView *_tableView_0;
 
-    CAShapeLayer *_separatorLine;
-    
-    CATextLayer *_title_1;
-    CAShapeLayer *_indicator_1;
-    IndicatorStatus _indicatorStatus_1;
-    UITableView *_tableView_1;
-
-    NSArray *_layers;
-    
     UIView *_backGroundView;
-    BackGroundViewStatus _backGroundViewStatus;
+    UITableView *_tableView;
     
-    
-    
-    
-    //*****
-    NSArray *_titles;
-    NSArray *_indicators;
+    NSMutableArray *_titles;
+    NSMutableArray *_indicators;
     NSMutableArray *_indicatorStatus;
-    NSArray *_tableViews;
+    
+    
+    NSInteger _lastSelectedIndex;
+    NSInteger _currentSelectedIndex;
+    
+    NSInteger _numOfMenu;
+    
+    NSArray *_testArray;
     
 }
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
+    
+    // 根据菜单的数量计算出每个菜单的位置.
     if (self) {
         
+        _testArray = @[ @[ @"我是一ddddd", @"我是二哟", @"去你妈的" ], @[@"嗯嗯嗯", @"fuck!you!"], @[@"lalala", @"xixixixix"] ];
+//      _testArray = @[ @[@"我是一", @"我是二哟", @"去你妈的"], @[@"嗯嗯嗯", @"fuck!you!"] ];
+
+        
+        
+        _numOfMenu = _testArray.count;
+        
+        CGFloat textLayerInterval = frame.size.width / ( _numOfMenu * 2);
+        CGFloat separatorLineInterval = frame.size.width / _numOfMenu;
+
+        _titles = [[NSMutableArray alloc] initWithCapacity:_numOfMenu];
+        _indicators = [[NSMutableArray alloc] initWithCapacity:_numOfMenu];
+        _indicatorStatus = [[NSMutableArray alloc] initWithCapacity:_numOfMenu];
+        
+        for (int i = 0; i < _numOfMenu; i++) {
+            
+            CGPoint position = CGPointMake( (i * 2 + 1) * textLayerInterval , frame.size.height / 2);
+            CATextLayer *title = [self creatTextLayerWithNSString:_testArray[i][0] withColor:[UIColor redColor] andPosition:position];
+            [self.layer addSublayer:title];
+            [_titles addObject:title];
+            
+            
+            CAShapeLayer *indicator = [self creatIndicatorWithColor:[UIColor orangeColor] andPosition:CGPointMake(position.x + title.bounds.size.width / 2 + 8, frame.size.height / 2)];
+            [self.layer addSublayer:indicator];
+            [_indicators addObject:indicator];
+            [_indicatorStatus addObject:@(IndicatorStateHide)];
+            
+            if (i != _numOfMenu - 1) {
+                CGPoint separatorPosition = CGPointMake((i + 1) * separatorLineInterval, frame.size.height / 2);
+                CAShapeLayer *separator = [self creatSeparatorLineWithColor:[UIColor colorWithRed:239.0/255.0 green:239.0/255.0 blue:243.0/255.0 alpha:1.0] andPosition:separatorPosition];
+                [self.layer addSublayer:separator];
+            }
+            
+
+            
+        }
+        _tableView = [self creatTableViewAtPosition:CGPointMake(0, self.frame.origin.y + self.frame.size.height)];
+        
+        
+
         // 设置menu, 并添加手势
         self.backgroundColor = [UIColor whiteColor];
-        CGRect theFrame = CGRectMake(frame.origin.x, frame.origin.y, 320, 40);
         UIGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapMenu:)];
         [self addGestureRecognizer:tapGesture];
         
-        _title_0 = [self creatTextLayerWithNSString:@"商品排序" withColor:[UIColor orangeColor] andPosition:CGPointMake(theFrame.size.width / 4, theFrame.size.height / 2)];
-        [self.layer addSublayer:_title_0];
-        _indicator_0 = [self creatIndicatorWithColor:[UIColor redColor] andPosition:CGPointMake(120, theFrame.size.height / 2)];
-        [self.layer addSublayer:_indicator_0];
-        _indicatorStatus_0 = IndicatorStateHide;
-        
-        _separatorLine = [self creatSeparatorLineWithColor:[UIColor colorWithRed:239.0/255.0 green:239.0/255.0 blue:243.0/255.0 alpha:1.0] andPosition:CGPointMake(160, theFrame.size.height / 2)];
-        [self.layer addSublayer:_separatorLine];
-        
-        _title_1 = [self creatTextLayerWithNSString:@"全部商品" withColor:[UIColor orangeColor] andPosition:CGPointMake(theFrame.size.width * 3 / 4, theFrame.size.height / 2)];
-        [self.layer addSublayer:_title_1];
-        _indicator_1 = [self creatIndicatorWithColor:[UIColor redColor] andPosition:CGPointMake(280, theFrame.size.height / 2)];
-        [self.layer addSublayer:_indicator_1];
-        _indicatorStatus_1 = IndicatorStateHide;
-        
-        
-        _tableView_0 = [self creatTableWithArray:@[ @"fff" ] atPosition:CGPointMake(self.frame.origin.x, self.frame.origin.y + self.frame.size.height)];
-        _tableView_1 = [self creatTableWithArray:@[ @"fff" ] atPosition:CGPointMake(self.frame.origin.x + self.frame.size.width / 2, self.frame.origin.y + self.frame.size.height)];
-        
-        //indicatorStatus
-        _indicators = @[ _indicator_0, _indicator_1 ];
-        _indicatorStatus = [[NSMutableArray alloc] initWithArray:@[ @(_indicatorStatus_0), @(_indicatorStatus_1) ]];
-        _titles = @[ _title_0, _title_1 ];
-        _tableViews = @[ _tableView_0, _tableView_1 ];
-        
-        
-        
+   
         // 用_layers来保存所有的layers
 //        _layers = @[ _title_0, _indicator_0, _separatorLine, _title_1, _indicator_1 ];
         
@@ -107,24 +110,19 @@
     CGPoint touchPoint = [paramSender locationInView:self];
     
     // 思路: 根据indicator的状态去判断.
-    NSInteger tapIndex;
-    if (touchPoint.x < 160) {
-        tapIndex = 0;
-        
-    } else {
-        tapIndex = 1;
-    }
+    
+    // 得到tapIndex
+    NSInteger tapIndex = touchPoint.x / (self.frame.size.width / _numOfMenu);
+    
     
     //除了被点击的,先全部恢复为初始状态.
-    for (int i = 0; i < _indicatorStatus.count; i++) {
+    for (int i = 0; i < _numOfMenu; i++) {
         // 若不是被点击的
         if (i != tapIndex) {
             [_indicatorStatus replaceObjectAtIndex:i withObject:@(IndicatorStateHide)];
             IndicatorStatus status = [_indicatorStatus[i] intValue];
             [self animateIndicator:_indicators[i] Forward:(status == IndicatorStateShow) complete:^{
-                [self animateTableView:_tableViews[i] show:(status == IndicatorStateShow) complete:^{
-                    // 什么也不做
-                }];
+                //什么也不做呀
             }];
         }
     }
@@ -136,7 +134,7 @@
     // 对点击的做出改变, 对未点击的做出状态判断, 展开的收起来, 没有展开的什么也不做.
     [self animateIndicator:_indicators[tapIndex] Forward:(newStatus == IndicatorStateShow) complete:^{
         [self animateBackGroundView:_backGroundView show:(newStatus == IndicatorStateShow) complete:^{
-            [self animateTableView:_tableViews[tapIndex] show:(newStatus == IndicatorStateShow) complete:^{
+            [self animateTableView:_tableView show:(newStatus == IndicatorStateShow) complete:^{
                 // 什么也不做
             }];
         }];
@@ -147,19 +145,24 @@
 
 - (void)tapBackGround:(UITapGestureRecognizer *)paramSender
 {
-    // 全部恢复状态.
-    for (int i = 0; i < _indicatorStatus.count; i++) {
+
+
+    for (int i = 0; i < _numOfMenu; i++) {
+        
+        if ([_indicatorStatus[i] intValue] == IndicatorStateShow) {
             [_indicatorStatus replaceObjectAtIndex:i withObject:@(IndicatorStateHide)];
-            IndicatorStatus status = [_indicatorStatus[i] intValue];
-            [self animateIndicator:_indicators[i] Forward:(status == IndicatorStateShow) complete:^{
-                [self animateBackGroundView:_backGroundView show:(status == IndicatorStateShow) complete:^{
-                    [self animateTableView:_tableViews[i] show:(status == IndicatorStateShow) complete:^{
-                        // 什么也不做
+            [self animateIndicator:_indicators[i] Forward:NO complete:^{
+                [self animateBackGroundView:_backGroundView show:NO complete:^{
+                    [self animateTableView:_tableView show:NO complete:^{
+                        //什么也不做
                     }];
                 }];
             }];
+        }
+
     }
     
+
     
     
 }
@@ -167,16 +170,12 @@
 
 #pragma mark - tableView
 
-- (UITableView *)creatTableWithArray:(NSArray *)array atPosition:(CGPoint)point
-{
-    UITableView *tableView = [UITableView new];
-    
-    tableView.frame = CGRectMake(point.x, point.y, 160, 240);
-    tableView.rowHeight = 40;
-    
-    
-    return tableView;
-}
+//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+//{
+//    
+//}
+
+
 
 
 #pragma mark - animation
@@ -214,16 +213,13 @@
     
     if (show) {
         
-        
         [self.superview addSubview:view];
         [view.superview addSubview:self];
-        
 
         [UIView animateWithDuration:0.2 animations:^{
             view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.3];
         }];
-
-        
+    
     } else {
         [UIView animateWithDuration:0.2 animations:^{
             view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.0];
@@ -240,6 +236,8 @@
 {
     if (show) {
         [self.superview addSubview:tableView];
+        
+        
     } else {
         [tableView removeFromSuperview];
     }
@@ -296,17 +294,37 @@
 // 创建textLayer
 - (CATextLayer *)creatTextLayerWithNSString:(NSString *)string withColor:(UIColor *)color andPosition:(CGPoint)point
 {
+    
+    // 计算string的size
+    CGFloat fontSize = 13.0;
+    NSDictionary *dic = @{NSFontAttributeName: [UIFont systemFontOfSize:fontSize]};
+    CGSize size = [string boundingRectWithSize:CGSizeMake(280, 0) options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:dic context:nil].size;
+    
+    
     CATextLayer *layer = [CATextLayer new];
+    layer.bounds = CGRectMake(0, 0, size.width, size.height);
     layer.string = string;
-    layer.fontSize = 15.0;
+    layer.fontSize = fontSize;
     layer.alignmentMode = kCAAlignmentCenter;
     layer.foregroundColor = color.CGColor;
-    layer.bounds = CGRectMake(0, 0, 100, 20);
+    
     layer.contentsScale = [[UIScreen mainScreen] scale];
+    
     
     layer.position = point;
     
     return layer;
+}
+
+
+- (UITableView *)creatTableViewAtPosition:(CGPoint)point
+{
+    UITableView *tableView = [UITableView new];
+    
+    tableView.frame = CGRectMake(point.x, point.y, self.frame.size.width, 160);
+    tableView.rowHeight = 36;
+    
+    return tableView;
 }
 
 

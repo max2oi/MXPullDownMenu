@@ -23,7 +23,7 @@ typedef enum
 BackGroundViewStatus;
 
 
-@interface MXPullDownMenu000 : UIView
+@interface MXPullDownMenu000 : UIView<UITableViewDelegate, UITableViewDataSource>
 
 @end
 
