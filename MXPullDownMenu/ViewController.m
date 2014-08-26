@@ -7,8 +7,6 @@
 //
 
 #import "ViewController.h"
-#import "MXPullDownMenu.h"
-#import "MXPullDownMenu000.h"
 
 @interface ViewController ()
 
@@ -32,7 +30,18 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationItem.title = @"NavigationBar";
     
-    MXPullDownMenu000 *menu = [[MXPullDownMenu000 alloc] initWithFrame:CGRectMake(0, 200, 320, 36)];
+    
+    
+    NSArray *testArray;
+//    testArray = @[ @[ @"我是一ddddd", @"我是二哟", @"去你妈的", @"吃鸡巴把", @"大家好哟" ], @[@"嗯嗯嗯", @"fuck!you!"], @[@"lalala", @"xixixixix"] ];
+    //      testArray = @[ @[@"我是一", @"我是二哟", @"去你妈的"], @[@"嗯嗯嗯", @"fuck!you!"] ];
+    
+//        testArray = @[ @[ @"我是一ddddd", @"我是二哟", @"去你妈的" ], @[@"嗯嗯嗯", @"fuck!you!"], @[@"lalala", @"xixixixix"], @[@"111fdfdf", @"543544534", @"fffefefefef", @"1234567890987654323456"]];
+    
+    
+    MXPullDownMenu *menu = [[MXPullDownMenu alloc] initWithArray:testArray selectedColor:[UIColor greenColor]];
+    menu.delegate = self;
+    menu.frame = CGRectMake(0, 200, menu.frame.size.width, menu.frame.size.height);
     [self.view addSubview:menu];
 }
 
@@ -41,5 +50,15 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)PullDownMenu:(MXPullDownMenu *)pullDownMenu didSelectRowAtColumn:(NSInteger)column row:(NSInteger)row
+{
+    NSLog(@"%d -- %d", column, row);
+}
+
+
+
+#pragma mark - MXPullDownMenuDelegate
+
 
 @end

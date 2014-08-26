@@ -21,8 +21,8 @@
 		488D19CC19A5179C00A0584C /* MXPullDownMenuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 488D19CB19A5179C00A0584C /* MXPullDownMenuTests.m */; };
 		488D19D819A517CA00A0584C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 488D19D619A517CA00A0584C /* ViewController.m */; };
 		488D19D919A517CA00A0584C /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 488D19D719A517CA00A0584C /* ViewController.xib */; };
-		488D19DF19A5881F00A0584C /* MXPullDownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 488D19DE19A5881F00A0584C /* MXPullDownMenu.m */; };
-		488D19E219A5973B00A0584C /* MXPullDownMenu000.m in Sources */ = {isa = PBXBuildFile; fileRef = 488D19E119A5973B00A0584C /* MXPullDownMenu000.m */; };
+		488D19E219A5973B00A0584C /* MXPullDownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 488D19E119A5973B00A0584C /* MXPullDownMenu.m */; };
+		48D5712D19A9796A00255F5A /* text.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48D5712C19A9796A00255F5A /* text.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,10 +55,9 @@
 		488D19D519A517CA00A0584C /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		488D19D619A517CA00A0584C /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		488D19D719A517CA00A0584C /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
-		488D19DD19A5881F00A0584C /* MXPullDownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXPullDownMenu.h; sourceTree = "<group>"; };
-		488D19DE19A5881F00A0584C /* MXPullDownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXPullDownMenu.m; sourceTree = "<group>"; };
-		488D19E019A5973B00A0584C /* MXPullDownMenu000.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXPullDownMenu000.h; sourceTree = "<group>"; };
-		488D19E119A5973B00A0584C /* MXPullDownMenu000.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXPullDownMenu000.m; sourceTree = "<group>"; };
+		488D19E019A5973B00A0584C /* MXPullDownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXPullDownMenu.h; sourceTree = "<group>"; };
+		488D19E119A5973B00A0584C /* MXPullDownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXPullDownMenu.m; sourceTree = "<group>"; };
+		48D5712C19A9796A00255F5A /* text.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = text.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,10 +87,9 @@
 		488D199A19A5179C00A0584C = {
 			isa = PBXGroup;
 			children = (
-				488D19DD19A5881F00A0584C /* MXPullDownMenu.h */,
-				488D19DE19A5881F00A0584C /* MXPullDownMenu.m */,
-				488D19E019A5973B00A0584C /* MXPullDownMenu000.h */,
-				488D19E119A5973B00A0584C /* MXPullDownMenu000.m */,
+				48D5712C19A9796A00255F5A /* text.xib */,
+				488D19E019A5973B00A0584C /* MXPullDownMenu.h */,
+				488D19E119A5973B00A0584C /* MXPullDownMenu.m */,
 				488D19AC19A5179C00A0584C /* MXPullDownMenu */,
 				488D19C519A5179C00A0584C /* MXPullDownMenuTests */,
 				488D19A519A5179C00A0584C /* Frameworks */,
@@ -239,6 +237,7 @@
 			files = (
 				488D19B119A5179C00A0584C /* InfoPlist.strings in Resources */,
 				488D19D919A517CA00A0584C /* ViewController.xib in Resources */,
+				48D5712D19A9796A00255F5A /* text.xib in Resources */,
 				488D19B919A5179C00A0584C /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -260,8 +259,7 @@
 			files = (
 				488D19D819A517CA00A0584C /* ViewController.m in Sources */,
 				488D19B719A5179C00A0584C /* AppDelegate.m in Sources */,
-				488D19DF19A5881F00A0584C /* MXPullDownMenu.m in Sources */,
-				488D19E219A5973B00A0584C /* MXPullDownMenu000.m in Sources */,
+				488D19E219A5973B00A0584C /* MXPullDownMenu.m in Sources */,
 				488D19B319A5179C00A0584C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
