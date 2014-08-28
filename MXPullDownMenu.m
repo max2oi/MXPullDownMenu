@@ -266,8 +266,12 @@
         
         tableView.frame = CGRectMake(0, self.frame.origin.y + self.frame.size.height, self.frame.size.width, 0);
         [self.superview addSubview:tableView];
+        
+        
+        CGFloat tableViewHeight = ([tableView numberOfRowsInSection:0] > 5) ? (5 * tableView.rowHeight) : ([tableView numberOfRowsInSection:0] * tableView.rowHeight);
+        
         [UIView animateWithDuration:0.2 animations:^{
-            _tableView.frame = CGRectMake(0, self.frame.origin.y + self.frame.size.height, self.frame.size.width, _tableView.rowHeight * [tableView numberOfRowsInSection:0]);
+            _tableView.frame = CGRectMake(0, self.frame.origin.y + self.frame.size.height, self.frame.size.width, tableViewHeight);
         }];
 
     } else {
@@ -292,7 +296,8 @@
         title.foregroundColor = _menuColor.CGColor;
     }
     CGSize size = [self calculateTitleSizeWithString:title.string];
-    title.frame = CGRectMake(title.frame.origin.x, title.frame.origin.y, size.width, size.height);
+    CGFloat sizeWidth = (size.width < (self.frame.size.width / _numOfMenu) - 25) ? size.width : self.frame.size.width / _numOfMenu - 25;
+    title.bounds = CGRectMake(0, 0, sizeWidth, size.height);
     
     
     complete();
@@ -364,14 +369,14 @@
     CGSize size = [self calculateTitleSizeWithString:string];
     
     CATextLayer *layer = [CATextLayer new];
-    layer.bounds = CGRectMake(0, 0, size.width, size.height);
+    CGFloat sizeWidth = (size.width < (self.frame.size.width / _numOfMenu) - 25) ? size.width : self.frame.size.width / _numOfMenu - 25;
+    layer.bounds = CGRectMake(0, 0, sizeWidth, size.height);
     layer.string = string;
     layer.fontSize = 13.0;
     layer.alignmentMode = kCAAlignmentCenter;
     layer.foregroundColor = color.CGColor;
     
     layer.contentsScale = [[UIScreen mainScreen] scale];
-    
     
     layer.position = point;
     
