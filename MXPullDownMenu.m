@@ -34,7 +34,6 @@
 {
     self = [super initWithFrame:frame];
     
-    // 根据菜单的数量计算出每个菜单的位置.
     if (self) {
         
     

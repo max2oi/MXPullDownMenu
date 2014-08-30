@@ -33,10 +33,7 @@
     
     
     NSArray *testArray;
-    testArray = @[ @[ @"我是一fadfadsfasdfadsfasdfasdfsadfasdfddd", @"我是二哟", @"去你妈的", @"吃鸡巴把", @"大家好哟" , @"大家好ffff哟" , @"大家ewer好哟" ], @[@"嗯嗯嗯", @"fuck!you!"], @[@"lalala", @"xixixixix"] ];
-    //      testArray = @[ @[@"我是一", @"我是二哟", @"去你妈的"], @[@"嗯嗯嗯", @"fuck!you!"] ];
-    
-//        testArray = @[ @[ @"我是一ddddd", @"我是二哟", @"去你妈的" ], @[@"嗯嗯嗯", @"fuck!you!"], @[@"lalala", @"xixixixix"], @[@"111fdfdf", @"543544534", @"fffefefefef", @"1234567890987654323456"]];
+    testArray = @[ @[ @"这是长字符串的测试数据,所以要足够长", @"通过实现", @"代理来对", @"下拉菜单", @"的点击做" , @"出反馈" , @"就是这样" ], @[@"使用数组", @"进行初始化"], @[@"食物", @"水果", @"面食", @"肉类", @"素食"] ];
     
     
     MXPullDownMenu *menu = [[MXPullDownMenu alloc] initWithArray:testArray selectedColor:[UIColor greenColor]];
@@ -51,14 +48,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+// 实现代理.
+#pragma mark - MXPullDownMenuDelegate
+
 - (void)PullDownMenu:(MXPullDownMenu *)pullDownMenu didSelectRowAtColumn:(NSInteger)column row:(NSInteger)row
 {
     NSLog(@"%d -- %d", column, row);
 }
-
-
-
-#pragma mark - MXPullDownMenuDelegate
-
 
 @end
