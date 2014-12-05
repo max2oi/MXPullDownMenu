@@ -54,7 +54,7 @@
 
 - (void)PullDownMenu:(MXPullDownMenu *)pullDownMenu didSelectRowAtColumn:(NSInteger)column row:(NSInteger)row
 {
-    NSLog(@"%d -- %d", column, row);
+    NSLog(@"%ld -- %ld", (long)column, (long)row);
 }
 
 @end

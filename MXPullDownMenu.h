@@ -10,6 +10,7 @@
 
 @class MXPullDownMenu;
 
+
 typedef enum
 {
     IndicatorStateShow = 0,
@@ -40,6 +41,9 @@ BackGroundViewStatus;
 
 
 // CALayerCategory
+/*
+* for save the animation status
+*/
 @interface CALayer (MXAddAnimationAndValue)
 
 - (void)addAnimation:(CAAnimation *)anim andValue:(NSValue *)value forKeyPath:(NSString *)keyPath;

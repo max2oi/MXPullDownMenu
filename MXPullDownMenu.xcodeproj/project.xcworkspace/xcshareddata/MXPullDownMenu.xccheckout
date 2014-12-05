@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>70155A01-812B-4907-8449-A45374E7D338</string>
+	<key>IDESourceControlProjectName</key>
+	<string>MXPullDownMenu</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>59F478F631E288447734552C398AF45718270745</key>
+		<string>https://github.com/xxxxxtongxue/MXPullDownMenu.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>MXPullDownMenu.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>59F478F631E288447734552C398AF45718270745</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/xxxxxtongxue/MXPullDownMenu.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>59F478F631E288447734552C398AF45718270745</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>59F478F631E288447734552C398AF45718270745</string>
+			<key>IDESourceControlWCCName</key>
+			<string>MXPullDownMenu</string>
+		</dict>
+	</array>
+</dict>
+</plist>
