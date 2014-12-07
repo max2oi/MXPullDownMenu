@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		483213C11A34327D004E70D2 /* devMXPullDownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 483213C01A34327D004E70D2 /* devMXPullDownMenu.m */; };
 		488D19A719A5179C00A0584C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 488D19A619A5179C00A0584C /* Foundation.framework */; };
 		488D19A919A5179C00A0584C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 488D19A819A5179C00A0584C /* CoreGraphics.framework */; };
 		488D19AB19A5179C00A0584C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 488D19AA19A5179C00A0584C /* UIKit.framework */; };
@@ -35,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		483213BF1A34327D004E70D2 /* devMXPullDownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = devMXPullDownMenu.h; sourceTree = "<group>"; };
+		483213C01A34327D004E70D2 /* devMXPullDownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = devMXPullDownMenu.m; sourceTree = "<group>"; };
 		488D19A319A5179C00A0584C /* MXPullDownMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MXPullDownMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		488D19A619A5179C00A0584C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		488D19A819A5179C00A0584C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -87,6 +90,8 @@
 			children = (
 				488D19E019A5973B00A0584C /* MXPullDownMenu.h */,
 				488D19E119A5973B00A0584C /* MXPullDownMenu.m */,
+				483213BF1A34327D004E70D2 /* devMXPullDownMenu.h */,
+				483213C01A34327D004E70D2 /* devMXPullDownMenu.m */,
 				488D19AC19A5179C00A0584C /* MXPullDownMenu */,
 				488D19C519A5179C00A0584C /* MXPullDownMenuTests */,
 				488D19A519A5179C00A0584C /* Frameworks */,
@@ -254,6 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				488D19D819A517CA00A0584C /* ViewController.m in Sources */,
+				483213C11A34327D004E70D2 /* devMXPullDownMenu.m in Sources */,
 				488D19B719A5179C00A0584C /* AppDelegate.m in Sources */,
 				488D19E219A5973B00A0584C /* MXPullDownMenu.m in Sources */,
 				488D19B319A5179C00A0584C /* main.m in Sources */,

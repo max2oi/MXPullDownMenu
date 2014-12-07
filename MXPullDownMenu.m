@@ -154,12 +154,9 @@
 - (void)tapBackGround:(UITapGestureRecognizer *)paramSender
 {
     
-
-    
     [self animateIdicator:_indicators[_currentSelectedMenudIndex] background:_backGroundView tableView:_tableView title:_titles[_currentSelectedMenudIndex] forward:NO complecte:^{
         _show = NO;
     }];
-
 }
 
 
