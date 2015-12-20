@@ -34,9 +34,10 @@ BackGroundViewStatus;
 @interface MXPullDownMenu : UIView<UITableViewDelegate, UITableViewDataSource>
 
 - (MXPullDownMenu *)initWithArray:(NSArray *)array selectedColor:(UIColor *)color;
+- (MXPullDownMenu *)initWithWidth:(CGFloat)width array:(NSArray *)array selectedColor:(UIColor *)color;
 
 @property (nonatomic) id<MXPullDownMenuDelegate> delegate;
-
+@property (nonatomic) int maxRowCount;
 @end
 
 
