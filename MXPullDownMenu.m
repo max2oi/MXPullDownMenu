@@ -41,11 +41,11 @@
     return self;
 }
 
-- (MXPullDownMenu *)initWithWidth:(CGFloat)width array:(NSArray *)array selectedColor:(UIColor *)color {
+- (MXPullDownMenu *)initWithFream:(CGRect)frame array:(NSArray *)array selectedColor:(UIColor *)color {
     self = [super init];
     if (self) {
         
-        self.frame = CGRectMake(0, 0, width, 36);
+        self.frame = frame;
         
         _menuColor = [UIColor colorWithRed:164.0/255.0 green:166.0/255.0 blue:169.0/255.0 alpha:1.0];
         
@@ -103,7 +103,8 @@
 
 - (MXPullDownMenu *)initWithArray:(NSArray *)array selectedColor:(UIColor *)color
 {
-    return [self initWithWidth:320 array:array selectedColor:color];
+    CGRect frame = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 36);
+    return [self initWithFream:frame array:array selectedColor:color];
 }
 
 

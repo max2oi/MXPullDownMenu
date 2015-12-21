@@ -37,7 +37,7 @@
     
     
     MXPullDownMenu *menu = [[MXPullDownMenu alloc] initWithArray:testArray selectedColor:[UIColor greenColor]];
-//    MXPullDownMenu *menu = [[MXPullDownMenu alloc] initWithWidth:44 array:@[nationArr,catsArr] selectedColor:[UIColor grayColor]];
+//    MXPullDownMenu *menu = [[MXPullDownMenu alloc] initWithFream:CGRectMake(0, 0, 240, 44) array:testArray selectedColor:[UIColor grayColor]];
     menu.delegate = self;
 //    menu.maxRowCount = 7;
     menu.frame = CGRectMake(0, 200, menu.frame.size.width, menu.frame.size.height);
