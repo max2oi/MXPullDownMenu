@@ -41,17 +41,16 @@
     return self;
 }
 
-- (MXPullDownMenu *)initWithArray:(NSArray *)array selectedColor:(UIColor *)color
-{
+- (MXPullDownMenu *)initWithFream:(CGRect)frame array:(NSArray *)array selectedColor:(UIColor *)color {
     self = [super init];
     if (self) {
         
-        self.frame = CGRectMake(0, 0, 320, 36);
+        self.frame = frame;
         
         _menuColor = [UIColor colorWithRed:164.0/255.0 green:166.0/255.0 blue:169.0/255.0 alpha:1.0];
         
         _array = array;
-
+        
         _numOfMenu = _array.count;
         
         CGFloat textLayerInterval = self.frame.size.width / ( _numOfMenu * 2);
@@ -95,11 +94,17 @@
         _backGroundView.opaque = NO;
         UIGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBackGround:)];
         [_backGroundView addGestureRecognizer:gesture];
-         
+        
         _currentSelectedMenudIndex = -1;
         _show = NO;
     }
     return self;
+}
+
+- (MXPullDownMenu *)initWithArray:(NSArray *)array selectedColor:(UIColor *)color
+{
+    CGRect frame = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 36);
+    return [self initWithFream:frame array:array selectedColor:color];
 }
 
 
@@ -266,8 +271,8 @@
         tableView.frame = CGRectMake(0, self.frame.origin.y + self.frame.size.height, self.frame.size.width, 0);
         [self.superview addSubview:tableView];
         
-        
-        CGFloat tableViewHeight = ([tableView numberOfRowsInSection:0] > 5) ? (5 * tableView.rowHeight) : ([tableView numberOfRowsInSection:0] * tableView.rowHeight);
+        int max = self.maxRowCount?:5;
+        CGFloat tableViewHeight = ([tableView numberOfRowsInSection:0] > max) ? (max * tableView.rowHeight) : ([tableView numberOfRowsInSection:0] * tableView.rowHeight);
         
         [UIView animateWithDuration:0.2 animations:^{
             _tableView.frame = CGRectMake(0, self.frame.origin.y + self.frame.size.height, self.frame.size.width, tableViewHeight);
